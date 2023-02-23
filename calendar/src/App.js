@@ -1,8 +1,9 @@
 import './App.css';
-import Calendar from './Calendar';
+import moment from 'moment';
+import Calendar from './components/Calendar';
 
 function App() {
-  const now = new Date(2017, 2, 8);
+  const now = new moment('10-25-2010');
   return (
     <>
       <Calendar date={now} />
