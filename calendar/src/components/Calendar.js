@@ -2,7 +2,7 @@ import moment from 'moment';
 import 'moment/locale/ru'
 import capitalize from './capitalize';
 import getDaysBetweenDates from './getDaysBetweenDates';
-import uniqid from 'uniqid';
+import getArraysOfDays from './getArraysOfDays';
 
 export default function Calendar(props) {
     moment.updateLocale('ru', {week: {dow: 1}})
@@ -15,7 +15,10 @@ export default function Calendar(props) {
     const start = moment(date).startOf('month').startOf('week');
     const end = moment(date).endOf('month').endOf('week');
     const allDays = getDaysBetweenDates(start, end);
-    console.log(allDays);
+    const weeksArr = getArraysOfDays(allDays);
+
+    const addClassToday = (day) => moment().format('DD-MM-YYYY') === day ? 'ui-datepicker-today' : '';
+    const addClassOtherMonth = (date, day) => moment(date).format('MM-YYYY') !== day.slice(3) ? 'ui-datepicker-other-month' : '';
 
     return (
         <div className="ui-datepicker">
@@ -54,36 +57,11 @@ export default function Calendar(props) {
                     </tr>
                 </thead>
                 <tbody>
-                    {allDays.map((day, index) => {
-                        if (index % 7 === 0 && index > 0) {
-                                return(
-                                <tr key={uniqid()}>
-                                    <td key={uniqid()}>{day}</td>
-                                </tr>
-                            )
-                        }
-                        return(
-                            <td key={uniqid()}>{day}</td>
-                        )
+                    {weeksArr.map((week, index) => {
+                        return <tr key={index}>
+                            {week.map((day, index) => <td key={index} className={`${addClassToday(day)} ${addClassOtherMonth(date, day)}`}>{day.slice(0, 2)}</td>)}
+                        </tr>
                     })}
-                    {/* <tr>
-                        <td className="ui-datepicker-other-month">27</td>
-                        <td className="ui-datepicker-other-month">28</td>
-                        <td>1</td>
-                        <td>2</td>
-                        <td>3</td>
-                        <td>4</td>
-                        <td>5</td>
-                    </tr>
-                    <tr>
-                        <td>6</td>
-                        <td>7</td>
-                        <td className="ui-datepicker-today">8</td>
-                        <td>9</td>
-                        <td>10</td>
-                        <td>11</td>
-                        <td>12</td>
-                    </tr> */}
                 </tbody>
             </table>
         </div>
